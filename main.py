@@ -14,6 +14,7 @@ def main():
 
     artists = get_local_artists()
     cache = get_cache()
+    missing_artists = []
 
     new_releases = []
     for artist in artists:
@@ -25,6 +26,7 @@ def main():
                 artistid = results['artist-list'][0]['id']
                 if results['artist-list'][0]['name'].upper() != artist.upper():
                     print(f'Artist {artist} not found')
+                    missing_artists.append(artist)
                     continue
             else:
                 print(f'Artist {artist} not found')
@@ -45,7 +47,7 @@ def main():
 
             release['artist'] = artist
             relevant_releases.append(release)
-            print(f'\t{release["title"]}')
+            #print(f'\t{release["title"]}')
 
 
             if artist in cache:
@@ -62,6 +64,11 @@ def main():
     print(f'{len(new_releases)} new releases')
     for release in new_releases:
         print(f'{release["artist"]} - {release["title"]}')
+    if len(missing_artists):
+        print()
+        print("Couldn't find these artists:")
+        for artist in missing_artists:
+            print(f'\t-{artist}')
     save_cache(cache)
     return True
 
